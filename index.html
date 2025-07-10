@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Takvimi - Giriş</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .tab-container {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .message {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💪 Fitness Takvimi</h1>
+        
+        <div class="tab-container">
+            <div class="tab active" onclick="changeTab('login')">Giriş Yap</div>
+            <div class="tab" onclick="changeTab('register')">Kayıt Ol</div>
+        </div>
+
+        <div id="message"></div>
+
+        <!-- Giriş Formu -->
+        <div id="login" class="tab-content active">
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Kullanıcı Adı</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Şifre</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit">Giriş Yap</button>
+            </form>
+        </div>
+
+        <!-- Kayıt Formu -->
+        <div id="register" class="tab-content">
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regUsername">Kullanıcı Adı</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Şifre</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regKilo">Kilo (kg)</label>
+                    <input type="number" id="regKilo" min="30" max="200" required>
+                </div>
+                <div class="form-group">
+                    <label for="regBoy">Boy (cm)</label>
+                    <input type="number" id="regBoy" min="120" max="220" required>
+                </div>
+                <div class="form-group">
+                    <label for="regTecrube">Tecrübe Seviyesi</label>
+                    <select id="regTecrube" required>
+                        <option value="">Seçiniz</option>
+                        <option value="baslangic">Başlangıç</option>
+                        <option value="orta">Orta</option>
+                        <option value="ileri">İleri</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Spor Günleri</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="sporGunleri" value="pazartesi">
+                            Pazartesi
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="sporGunleri" value="sali">
+                            Salı
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="sporGunleri" value="carsamba">
+                            Çarşamba
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="sporGunleri" value="persembe">
+                            Perşembe
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="sporGunleri" value="cuma">
+                            Cuma
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="sporGunleri" value="cumartesi">
+                            Cumartesi
+                        </label>
+                        <label class="checkbox-wrapper">
+                            <input type="checkbox" name="sporGunleri" value="pazar">
+                            Pazar
+                        </label>
+                    </div>
+                </div>
+                <button type="submit">Kayıt Ol</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Veritabanı kontrolü
+        if (!localStorage.getItem('users')) {
+            localStorage.setItem('users', JSON.stringify([]));
+        }
+
+        // Tab değiştirme
+        function changeTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById('message').innerHTML = '';
+        }
+
+        // Mesaj gösterme
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // Basit hash fonksiyonu
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return Math.abs(hash).toString();
+        }
+
+        // Giriş
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const hashedPassword = simpleHash(password);
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            const user = users.find(u => u.username === username && u.password === hashedPassword);
+            
+            if (user) {
+                localStorage.setItem('currentUser', username);
+                showMessage('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+            } else {
+                showMessage('Kullanıcı adı veya şifre hatalı!', 'error');
+            }
+        });
+
+        // Kayıt
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const kilo = document.getElementById('regKilo').value;
+            const boy = document.getElementById('regBoy').value;
+            const tecrube = document.getElementById('regTecrube').value;
+            
+            const sporGunleri = [];
+            document.querySelectorAll('input[name="sporGunleri"]:checked').forEach(checkbox => {
+                sporGunleri.push(checkbox.value);
+            });
+            
+            if (sporGunleri.length === 0) {
+                showMessage('En az 1 gün seçmelisiniz!', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users'));
+            
+            if (users.find(u => u.username === username)) {
+                showMessage('Bu kullanıcı adı zaten kullanılıyor!', 'error');
+                return;
+            }
+            
+            const newUser = {
+                username: username,
+                password: simpleHash(password),
+                profile: {
+                    kilo: parseInt(kilo),
+                    boy: parseInt(boy),
+                    tecrube: tecrube,
+                    sporGunleri: sporGunleri
+                },
+                takvim: [],
+                zorlanılanHareketler: [],
+                kayitTarihi: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            showMessage('Kayıt başarılı! Giriş yapabilirsiniz.', 'success');
+            setTimeout(() => {
+                changeTab('login');
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

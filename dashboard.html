@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Takvimi - Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+        }
+
+        .header button {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .header button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 1rem;
+            padding: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .profile-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+
+        .profile-stats {
+            margin-top: 1rem;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .calendar-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .week-view {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .day-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            min-height: 150px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .day-card.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .day-card.rest-day {
+            background: #f8f9fa;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .day-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .workout-type {
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .exercise-detail {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .exercise-list {
+            margin-top: 1rem;
+        }
+
+        .exercise-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exercise-name {
+            font-weight: bold;
+        }
+
+        .exercise-sets {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .btn-difficult {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.3s;
+        }
+
+        .btn-difficult:hover {
+            background: #c82333;
+        }
+
+        .btn-generate {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 1rem 0;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn-generate:hover {
+            background: #218838;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .alternative-list {
+            margin-top: 1rem;
+        }
+
+        .alternative-item {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .alternative-item:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+
+            .exercise-detail {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 90%;
+                height: 100vh;
+                z-index: 100;
+                transition: right 0.3s;
+            }
+
+            .exercise-detail.show {
+                right: 0;
+            }
+
+            .mobile-backdrop {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                z-index: 99;
+            }
+
+            .mobile-backdrop.show {
+                display: block;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💪 Fitness Takvimi</h1>
+        <div>
+            <span id="welcomeUser"></span>
+            <button onclick="logout()">Çıkış Yap</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Sol Sidebar - Profil -->
+        <div class="sidebar">
+            <div class="profile-info">
+                <div class="profile-avatar" id="userAvatar">👤</div>
+                <h3 id="username"></h3>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span>Kilo:</span>
+                        <strong id="userKilo"></strong>
+                    </div>
+                    <div class="stat">
+                        <span>Boy:</span>
+                        <strong id="userBoy"></strong>
+                    </div>
+                    <div class="stat">
+                        <span>Seviye:</span>
+                        <strong id="userTecrube"></strong>
+                    </div>
+                    <div class="stat">
+                        <span>Antrenman:</span>
+                        <strong id="userGunSayisi"></strong>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-generate" id="generateBtn" onclick="generateNewProgram()">
+                <span id="generateBtnText">🔄 Yeni Program Oluştur</span>
+                <span id="generateBtnLoader" class="loading" style="display: none;"></span>
+            </button>
+        </div>
+
+        <!-- Orta - Takvim -->
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <h2>Haftalık Program</h2>
+                <span id="currentWeek"></span>
+            </div>
+            <div class="week-view" id="weekView">
+                <!-- JavaScript ile doldurulacak -->
+            </div>
+        </div>
+
+        <!-- Sağ Sidebar - Egzersiz Detayları -->
+        <div class="exercise-detail" id="exerciseDetail">
+            <h3>Günlük Antrenman</h3>
+            <div id="selectedDayInfo">
+                <div class="empty-state">
+                    <h3>📅</h3>
+                    <p>Detayları görmek için bir gün seçin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobil için backdrop -->
+    <div class="mobile-backdrop" id="mobileBackdrop" onclick="closeExerciseDetail()"></div>
+
+    <!-- Alternatif Egzersiz Modal -->
+    <div id="alternativeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Alternatif Egzersizler</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <p>Bu egzersiz size zor geliyorsa, aşağıdaki alternatiflerden birini seçebilirsiniz:</p>
+            <div id="alternativeList" class="alternative-list">
+                <!-- JavaScript ile doldurulacak -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast mesajı -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Egzersiz veritabanı
+        const exerciseDB = {
+            gogus: [
+                { id: 1, isim: "Barbell Bench Press", zorluk: 3, set: "4x8-10" },
+                { id: 2, isim: "Dumbbell Press", zorluk: 2, set: "3x10-12" },
+                { id: 3, isim: "Push-up", zorluk: 1, set: "3x15-20" },
+                { id: 4, isim: "Cable Fly", zorluk: 2, set: "3x12-15" },
+                { id: 5, isim: "Incline Dumbbell Press", zorluk: 2, set: "3x10-12" }
+            ],
+            sirt: [
+                { id: 6, isim: "Pull-up", zorluk: 3, set: "4x6-8" },
+                { id: 7, isim: "Lat Pulldown", zorluk: 2, set: "3x10-12" },
+                { id: 8, isim: "Barbell Row", zorluk: 3, set: "4x8-10" },
+                { id: 9, isim: "Cable Row", zorluk: 2, set: "3x12-15" },
+                { id: 10, isim: "T-Bar Row", zorluk: 2, set: "3x10-12" }
+            ],
+            omuz: [
+                { id: 11, isim: "Military Press", zorluk: 3, set: "4x8-10" },
+                { id: 12, isim: "Dumbbell Shoulder Press", zorluk: 2, set: "3x10-12" },
+                { id: 13, isim: "Lateral Raise", zorluk: 1, set: "3x12-15" },
+                { id: 14, isim: "Front Raise", zorluk: 1, set: "3x12-15" },
+                { id: 15, isim: "Face Pull", zorluk: 2, set: "3x15-20" }
+            ],
+            kol: [
+                { id: 16, isim: "Barbell Curl", zorluk: 2, set: "3x10-12" },
+                { id: 17, isim: "Hammer Curl", zorluk: 1, set: "3x12-15" },
+                { id: 18, isim: "Tricep Dips", zorluk: 3, set: "3x8-10" },
+                { id: 19, isim: "Cable Tricep Extension", zorluk: 2, set: "3x12-15" },
+                { id: 20, isim: "Preacher Curl", zorluk: 2, set: "3x10-12" }
+            ],
+            bacak: [
+                { id: 21, isim: "Squat", zorluk: 3, set: "4x8-10" },
+                { id: 22, isim: "Leg Press", zorluk: 2, set: "3x10-12" },
+                { id: 23, isim: "Leg Extension", zorluk: 1, set: "3x12-15" },
+                { id: 24, isim: "Romanian Deadlift", zorluk: 3, set: "4x8-10" },
+                { id: 25, isim: "Leg Curl", zorluk: 1, set: "3x12-15" }
+            ],
+            core: [
+                { id: 26, isim: "Plank", zorluk: 1, set: "3x60sn" },
+                { id: 27, isim: "Crunch", zorluk: 1, set: "3x20-25" },
+                { id: 28, isim: "Russian Twist", zorluk: 2, set: "3x15-20" },
+                { id: 29, isim: "Leg Raise", zorluk: 2, set: "3x10-15" },
+                { id: 30, isim: "Cable Crunch", zorluk: 2, set: "3x15-20" }
+            ]
+        };
+
+        // Global değişkenler
+        let currentUser = null;
+        let selectedDay = null;
+        let currentProgram = [];
+
+        // Sayfa yüklendiğinde
+        window.onload = function() {
+            checkAuth();
+            loadUserData();
+            displayWeekView();
+            displayCurrentWeek();
+        };
+
+        // Kimlik doğrulama kontrolü
+        function checkAuth() {
+            const username = localStorage.getItem('currentUser');
+            if (!username) {
+                window.location.href = 'index.html';
+                return;
+            }
+        }
+
+        // Kullanıcı verilerini yükle
+        function loadUserData() {
+            const username = localStorage.getItem('currentUser');
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            currentUser = users.find(u => u.username === username);
+            
+            if (!currentUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // UI güncelle
+            document.getElementById('welcomeUser').textContent = `Hoş geldin, ${escapeHtml(username)}!`;
+            document.getElementById('username').textContent = escapeHtml(username);
+            document.getElementById('userKilo').textContent = (currentUser.profile.kilo || '--') + ' kg';
+            document.getElementById('userBoy').textContent = (currentUser.profile.boy || '--') + ' cm';
+            document.getElementById('userTecrube').textContent = 
+                currentUser.profile.tecrube ? 
+                currentUser.profile.tecrube.charAt(0).toUpperCase() + currentUser.profile.tecrube.slice(1) : 
+                'Belirtilmemiş';
+            document.getElementById('userGunSayisi').textContent = 
+                (currentUser.profile.sporGunleri ? currentUser.profile.sporGunleri.length : 0) + ' gün/hafta';
+            document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+            
+            // Program yoksa oluştur
+            if (!currentUser.takvim || currentUser.takvim.length === 0) {
+                generateNewProgram();
+            } else {
+                currentProgram = currentUser.takvim;
+            }
+        }
+
+        // HTML escape fonksiyonu
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Haftalık görünüm
+        function displayWeekView() {
+            const weekView = document.getElementById('weekView');
+            const gunler = ['pazartesi', 'sali', 'carsamba', 'persembe', 'cuma', 'cumartesi', 'pazar'];
+            const gunIsimleri = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+            
+            weekView.innerHTML = '';
+            
+            gunler.forEach((gun, index) => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card';
+                
+                const isWorkoutDay = currentUser.profile.sporGunleri && currentUser.profile.sporGunleri.includes(gun);
+                if (!isWorkoutDay) {
+                    dayCard.classList.add('rest-day');
+                    dayCard.onclick = () => showToast('Bu bir dinlenme günü');
+                } else {
+                    dayCard.onclick = () => selectDay(gun);
+                }
+                
+                const dayProgram = currentProgram.find(p => p.gun === gun);
+                
+                dayCard.innerHTML = `
+                    <div class="day-name">${gunIsimleri[index]}</div>
+                    ${isWorkoutDay ? 
+                        (dayProgram ? 
+                            `<div class="workout-type">${dayProgram.tip}</div>
+                             <small>${dayProgram.egzersizler.length} egzersiz</small>` : 
+                            '<small>Program bekleniyor</small>') : 
+                        '<small>Dinlenme</small>'}
+                `;
+                
+                weekView.appendChild(dayCard);
+            });
+        }
+
+        // Mevcut hafta
+        function displayCurrentWeek() {
+            const today = new Date();
+            const firstDay = new Date(today.setDate(today.getDate() - today.getDay() + 1));
+            const lastDay = new Date(today.setDate(today.getDate() - today.getDay() + 7));
+            
+            const options = { day: 'numeric', month: 'long' };
+            document.getElementById('currentWeek').textContent = 
+                `${firstDay.toLocaleDateString('tr-TR', options)} - ${lastDay.toLocaleDateString('tr-TR', options)}`;
+        }
+
+        // Gün seçimi
+        function selectDay(gun) {
+            if (!currentUser.profile.sporGunleri.includes(gun)) return;
+            
+            selectedDay = gun;
+            
+            // Aktif günü işaretle
+            document.querySelectorAll('.day-card').forEach((card, index) => {
+                const gunler = ['pazartesi', 'sali', 'carsamba', 'persembe', 'cuma', 'cumartesi', 'pazar'];
+                if (gunler[index] === gun) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+            
+            // Egzersiz detaylarını göster
+            displayDayDetails(gun);
+            
+            // Mobilde detay panelini aç
+            if (window.innerWidth <= 1024) {
+                document.getElementById('exerciseDetail').classList.add('show');
+                document.getElementById('mobileBackdrop').classList.add('show');
+            }
+        }
+
+        // Mobilde detay panelini kapat
+        function closeExerciseDetail() {
+            document.getElementById('exerciseDetail').classList.remove('show');
+            document.getElementById('mobileBackdrop').classList.remove('show');
+        }
+
+        // Gün detayları
+        function displayDayDetails(gun) {
+            const dayProgram = currentProgram.find(p => p.gun === gun);
+            const detailDiv = document.getElementById('selectedDayInfo');
+            
+            if (!dayProgram) {
+                detailDiv.innerHTML = `
+                    <div class="empty-state">
+                        <h3>📅</h3>
+                        <p>Bu gün için program oluşturulmamış</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            detailDiv.innerHTML = `
+                <h4>${gun.charAt(0).toUpperCase() + gun.slice(1)} - ${dayProgram.tip}</h4>
+                <div class="exercise-list">
+                    ${dayProgram.egzersizler.map(egz => `
+                        <div class="exercise-item">
+                            <div>
+                                <div class="exercise-name">${escapeHtml(egz.isim)}</div>
+                                <div class="exercise-sets">${egz.set}</div>
+                            </div>
+                            <button class="btn-difficult" onclick="reportDifficult(${egz.id}, '${gun}')">
+                                Zor geldi
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Toast mesajı göster
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // Program oluşturma algoritması
+        function generateNewProgram() {
+            const generateBtn = document.getElementById('generateBtn');
+            const generateBtnText = document.getElementById('generateBtnText');
+            const generateBtnLoader = document.getElementById('generateBtnLoader');
+            
+            // Yükleme durumunu ayarla
+            generateBtn.disabled = true;
+            generateBtnText.style.display = 'none';
+            generateBtnLoader.style.display = 'inline-block';
+            
+            setTimeout(() => {
+                try {
+                    const { sporGunleri, tecrube } = currentUser.profile;
+                    currentProgram = [];
+                    
+                    // Zorluk seviyesi
+                    const maxZorluk = tecrube === 'baslangic' ? 2 : tecrube === 'orta' ? 3 : 4;
+                    
+                    if (!sporGunleri || sporGunleri.length === 0) {
+                        showToast('Lütfen antrenman günlerini ayarlayın');
+                        return;
+                    }
+                    
+                    if (sporGunleri.length <= 3) {
+                        // Full-body program
+                        sporGunleri.forEach(gun => {
+                            const egzersizler = [];
+                            
+                            // Her kas grubundan 1-2 egzersiz
+                            ['gogus', 'sirt', 'omuz', 'bacak'].forEach(kasGrubu => {
+                                const uygunEgzersizler = exerciseDB[kasGrubu].filter(e => e.zorluk <= maxZorluk);
+                                shuffleArray(uygunEgzersizler);
+                                egzersizler.push(uygunEgzersizler[0]);
+                                if (Math.random() > 0.5 && uygunEgzersizler.length > 1) {
+                                    egzersizler.push(uygunEgzersizler[1]);
+                                }
+                            });
+                            
+                            // Core egzersizi ekle
+                            const coreEgzersizi = exerciseDB.core[Math.floor(Math.random() * 2)];
+                            egzersizler.push(coreEgzersizi);
+                            
+                            currentProgram.push({
+                                gun: gun,
+                                tip: 'Full Body',
+                                egzersizler: egzersizler
+                            });
+                        });
+                    } else if (sporGunleri.length === 4) {
+                        // Upper/Lower split
+                        const upperDays = [sporGunleri[0], sporGunleri[2]];
+                        const lowerDays = [sporGunleri[1], sporGunleri[3]];
+                        
+                        upperDays.forEach(gun => {
+                            const egzersizler = [];
+                            ['gogus', 'sirt', 'omuz', 'kol'].forEach(kasGrubu => {
+                                const uygunEgzersizler = exerciseDB[kasGrubu].filter(e => e.zorluk <= maxZorluk);
+                                shuffleArray(uygunEgzersizler);
+                                egzersizler.push(uygunEgzersizler[0]);
+                            });
+                            
+                            currentProgram.push({
+                                gun: gun,
+                                tip: 'Üst Vücut',
+                                egzersizler: egzersizler
+                            });
+                        });
+                        
+                        lowerDays.forEach(gun => {
+                            const egzersizler = [];
+                            const bacakEgzersizleri = exerciseDB.bacak.filter(e => e.zorluk <= maxZorluk);
+                            shuffleArray(bacakEgzersizleri);
+                            
+                            // 3 bacak egzersizi
+                            for (let i = 0; i < 3; i++) {
+                                if (bacakEgzersizleri[i]) {
+                                    egzersizler.push(bacakEgzersizleri[i]);
+                                }
+                            }
+                            
+                            // 2 core egzersizi
+                            shuffleArray(exerciseDB.core);
+                            egzersizler.push(exerciseDB.core[0]);
+                            egzersizler.push(exerciseDB.core[1]);
+                            
+                            currentProgram.push({
+                                gun: gun,
+                                tip: 'Alt Vücut',
+                                egzersizler: egzersizler
+                            });
+                        });
+                    } else {
+                        // 5+ gün - Kas grubu split
+                        const kasGruplari = ['gogus', 'sirt', 'omuz', 'bacak', 'kol'];
+                        sporGunleri.forEach((gun, index) => {
+                            const kasGrubu = kasGruplari[index % kasGruplari.length];
+                            const egzersizler = [];
+                            
+                            const uygunEgzersizler = exerciseDB[kasGrubu].filter(e => e.zorluk <= maxZorluk);
+                            shuffleArray(uygunEgzersizler);
+                            
+                            // Ana kas grubu için 3-4 egzersiz
+                            for (let i = 0; i < Math.min(4, uygunEgzersizler.length); i++) {
+                                egzersizler.push(uygunEgzersizler[i]);
+                            }
+                            
+                            // Core egzersizi ekle
+                            if (Math.random() > 0.5) {
+                                const coreEgzersiz = exerciseDB.core[Math.floor(Math.random() * exerciseDB.core.length)];
+                                egzersizler.push(coreEgzersiz);
+                            }
+                            
+                            currentProgram.push({
+                                gun: gun,
+                                tip: kasGrubu.charAt(0).toUpperCase() + kasGrubu.slice(1),
+                                egzersizler: egzersizler
+                            });
+                        });
+                    }
+                    
+                    // Programı kaydet
+                    saveProgram();
+                    displayWeekView();
+                    showToast('Yeni program başarıyla oluşturuldu');
+                } catch (error) {
+                    console.error('Program oluşturma hatası:', error);
+                    showToast('Program oluşturulurken hata oluştu', 5000);
+                } finally {
+                    // Yükleme durumunu kaldır
+                    generateBtn.disabled = false;
+                    generateBtnText.style.display = 'inline-block';
+                    generateBtnLoader.style.display = 'none';
+                }
+            }, 500); // Yapay gecikme
+        }
+
+        // Array karıştırma
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Zor gelen egzersiz bildirimi
+        function reportDifficult(exerciseId, gun) {
+            // Zorlanılan egzersizi kaydet
+            if (!currentUser.zorlanılanHareketler) {
+                currentUser.zorlanılanHareketler = [];
+            }
+            currentUser.zorlanılanHareketler.push({
+                exerciseId: exerciseId,
+                tarih: new Date().toISOString()
+            });
+            
+            // Kullanıcıyı güncelle
+            const users = JSON.parse(localStorage.getItem('users') || []);
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+            
+            // Alternatif egzersizleri göster
+            showAlternatives(exerciseId, gun);
+        }
+
+        // Alternatif egzersizleri göster
+        function showAlternatives(exerciseId, gun) {
+            const modal = document.getElementById('alternativeModal');
+            const alternativeList = document.getElementById('alternativeList');
+            
+            // Mevcut egzersizi bul
+            let currentExercise = null;
+            let kasGrubu = null;
+            
+            for (const [grup, exercises] of Object.entries(exerciseDB)) {
+                const found = exercises.find(e => e.id === exerciseId);
+                if (found) {
+                    currentExercise = found;
+                    kasGrubu = grup;
+                    break;
+                }
+            }
+            
+            if (!currentExercise) {
+                showToast('Egzersiz bulunamadı');
+                return;
+            }
+            
+            // Alternatif egzersizleri filtrele (daha düşük zorluk)
+            let alternatives = exerciseDB[kasGrubu].filter(e => 
+                e.id !== exerciseId && e.zorluk < currentExercise.zorluk
+            );
+            
+            if (alternatives.length === 0) {
+                // Aynı zorluk seviyesinden alternatifler
+                alternatives = exerciseDB[kasGrubu].filter(e => 
+                    e.id !== exerciseId && e.zorluk === currentExercise.zorluk
+                );
+                
+                if (alternatives.length === 0) {
+                    // Hiç alternatif yoksa
+                    alternativeList.innerHTML = `
+                        <div class="empty-state">
+                            <p>Uygun alternatif bulunamadı</p>
+                        </div>
+                    `;
+                    modal.style.display = 'flex';
+                    return;
+                }
+            }
+            
+            alternativeList.innerHTML = alternatives.map(alt => `
+                <div class="alternative-item" onclick="selectAlternative(${exerciseId}, ${alt.id}, '${gun}')">
+                    <strong>${alt.isim}</strong>
+                    <div>Zorluk: ${'⭐'.repeat(alt.zorluk)}</div>
+                    <div>${alt.set}</div>
+                </div>
+            `).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        // Alternatif egzersiz seç
+        function selectAlternative(oldId, newId, gun) {
+            // Programda değiştir
+            const dayProgram = currentProgram.find(p => p.gun === gun);
+            if (!dayProgram) {
+                showToast('Program bulunamadı');
+                return;
+            }
+            
+            const exerciseIndex = dayProgram.egzersizler.findIndex(e => e.id === oldId);
+            if (exerciseIndex === -1) {
+                showToast('Egzersiz bulunamadı');
+                return;
+            }
+            
+            // Yeni egzersizi bul
+            let newExercise = null;
+            for (const exercises of Object.values(exerciseDB)) {
+                const found = exercises.find(e => e.id === newId);
+                if (found) {
+                    newExercise = found;
+                    break;
+                }
+            }
+            
+            if (!newExercise) {
+                showToast('Alternatif egzersiz bulunamadı');
+                return;
+            }
+            
+            dayProgram.egzersizler[exerciseIndex] = newExercise;
+            
+            // Kaydet ve güncelle
+            saveProgram();
+            displayDayDetails(gun);
+            closeModal();
+            showToast('Egzersiz başarıyla değiştirildi');
+        }
+
+        // Modal kapat
+        function closeModal() {
+            document.getElementById('alternativeModal').style.display = 'none';
+        }
+
+        // Programı kaydet
+        function saveProgram() {
+            currentUser.takvim = currentProgram;
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        // Çıkış yap
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        }
+
+        // Modal dışına tıklama
+        window.onclick = function(event) {
+            const modal = document.getElementById('alternativeModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
