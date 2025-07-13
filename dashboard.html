@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness Takvimi - Panel</title>
+    <title>Fitness Takvimi</title>
     <style>
         * {
             margin: 0;
@@ -12,65 +12,74 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            color: #333;
         }
 
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        /* Header */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header h1 {
-            font-size: 1.5rem;
-        }
-
-        .header button {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid white;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .header button:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .main-container {
-            display: grid;
-            grid-template-columns: 250px 1fr 300px;
-            gap: 1rem;
-            padding: 1rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .sidebar {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            height: fit-content;
-        }
-
-        .profile-info {
+            padding: 1.5rem 1rem 2rem;
             text-align: center;
-            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 0 0 25px 25px;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: white;
+            margin: -1rem 1rem 1rem;
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         .profile-avatar {
             width: 80px;
             height: 80px;
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -78,54 +87,115 @@
             font-size: 2rem;
             color: white;
             margin: 0 auto 1rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
         .profile-stats {
-            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .stat {
-            display: flex;
-            justify-content: space-between;
-            margin: 0.5rem 0;
-            padding: 0.5rem;
+        .stat-item {
             background: #f8f9fa;
-            border-radius: 5px;
+            padding: 0.75rem;
+            border-radius: 12px;
+            text-align: center;
         }
 
-        .calendar-section {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        .stat-value {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9rem;
         }
 
-        .calendar-header {
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* Generate Button */
+        .generate-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
         }
 
-        .week-view {
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.7;
+            transform: none;
+        }
+
+        /* Week View */
+        .week-section {
+            padding: 1rem;
+        }
+
+        .week-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .week-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .week-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .week-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .day-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 1rem;
+            background: white;
+            border-radius: 15px;
+            padding: 1rem 0.5rem;
             text-align: center;
-            min-height: 150px;
-            transition: all 0.3s;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
         }
 
         .day-card.active {
-            border-color: #667eea;
-            background: #f0f4ff;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
         }
 
         .day-card.rest-day {
@@ -134,104 +204,157 @@
             cursor: not-allowed;
         }
 
+        .day-card.rest-day:hover {
+            transform: none;
+        }
+
+        .day-card:hover:not(.rest-day) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
         .day-name {
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.8rem;
             margin-bottom: 0.5rem;
-            font-size: 0.9rem;
         }
 
         .workout-type {
-            background: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 0.25rem 0.5rem;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .day-card.active .workout-type {
+            background: rgba(255,255,255,0.2);
             color: white;
-            padding: 0.3rem 0.5rem;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            margin-top: 0.5rem;
         }
 
-        .exercise-detail {
+        .exercise-count {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Bottom Sheet */
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 25px 25px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-height: 70vh;
+            overflow: hidden;
         }
 
+        .bottom-sheet.show {
+            transform: translateY(0);
+        }
+
+        .bottom-sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: #ddd;
+            border-radius: 2px;
+            margin: 1rem auto 0;
+        }
+
+        .bottom-sheet-content {
+            padding: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(70vh - 3rem);
+        }
+
+        .bottom-sheet-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        /* Exercise List */
         .exercise-list {
-            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
         .exercise-item {
             background: #f8f9fa;
+            border-radius: 15px;
             padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        .exercise-info {
+            flex: 1;
+        }
+
         .exercise-name {
-            font-weight: bold;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
         }
 
         .exercise-sets {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
-        .btn-difficult {
-            background: #dc3545;
+        .difficulty-btn {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
             color: white;
             border: none;
-            padding: 0.3rem 0.8rem;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
             font-size: 0.8rem;
-            transition: background 0.3s;
-        }
-
-        .btn-difficult:hover {
-            background: #c82333;
-        }
-
-        .btn-generate {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
-            margin: 1rem 0;
-            width: 100%;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .btn-generate:hover {
-            background: #218838;
+        .difficulty-btn:hover {
+            transform: scale(1.05);
         }
 
+        /* Modal */
         .modal {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
             background: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            z-index: 2000;
+        }
+
+        .modal.show {
+            display: flex;
         }
 
         .modal-content {
             background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
+            border-radius: 25px 25px 0 0;
+            padding: 1.5rem;
+            width: 100%;
             max-height: 80vh;
             overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
         }
 
         .modal-header {
@@ -239,57 +362,94 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
         .close-btn {
-            background: none;
+            background: #f8f9fa;
             border: none;
-            font-size: 1.5rem;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
             cursor: pointer;
-            color: #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #666;
         }
 
         .alternative-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
             margin-top: 1rem;
         }
 
         .alternative-item {
+            background: #f8f9fa;
+            border-radius: 15px;
             padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
         .alternative-item:hover {
+            background: #e3f2fd;
             border-color: #667eea;
-            background: #f0f4ff;
         }
 
+        .alternative-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .alternative-difficulty {
+            color: #667eea;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .alternative-sets {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
             background: #333;
             color: white;
-            padding: 12px 24px;
-            border-radius: 4px;
-            z-index: 1000;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            z-index: 3000;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.3s ease;
+            font-size: 0.9rem;
+            max-width: 90vw;
+            text-align: center;
         }
 
         .toast.show {
             opacity: 1;
         }
 
+        /* Loading */
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
@@ -299,138 +459,145 @@
             to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                display: none;
-            }
-
-            .exercise-detail {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 90%;
-                height: 100vh;
-                z-index: 100;
-                transition: right 0.3s;
-            }
-
-            .exercise-detail.show {
-                right: 0;
-            }
-
-            .mobile-backdrop {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 99;
-            }
-
-            .mobile-backdrop.show {
-                display: block;
-            }
-        }
-
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 3rem;
-            color: #999;
+            padding: 2rem;
+            color: #666;
         }
 
-        .empty-state h3 {
+        .empty-state-icon {
+            font-size: 3rem;
             margin-bottom: 1rem;
+        }
+
+        /* Backdrop */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 999;
+            display: none;
+        }
+
+        .backdrop.show {
+            display: block;
+        }
+
+        /* Today Indicator */
+        .day-card.today::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            background: #28a745;
+            border-radius: 50%;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Safe area for notched devices */
+        .header {
+            padding-top: max(1.5rem, env(safe-area-inset-top));
+        }
+
+        .bottom-sheet {
+            padding-bottom: env(safe-area-inset-bottom);
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>💪 Fitness Takvimi</h1>
-        <div>
-            <span id="welcomeUser"></span>
-            <button onclick="logout()">Çıkış Yap</button>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <button class="logout-btn" onclick="logout()" title="Çıkış Yap">
+                🚪
+            </button>
+            <h1 class="header-title">💪 Fitness Takvimi</h1>
+            <p class="header-subtitle" id="welcomeUser">Hoş geldin!</p>
         </div>
-    </div>
 
-    <div class="main-container">
-        <!-- Sol Sidebar - Profil -->
-        <div class="sidebar">
-            <div class="profile-info">
-                <div class="profile-avatar" id="userAvatar">👤</div>
-                <h3 id="username"></h3>
-                <div class="profile-stats">
-                    <div class="stat">
-                        <span>Kilo:</span>
-                        <strong id="userKilo"></strong>
-                    </div>
-                    <div class="stat">
-                        <span>Boy:</span>
-                        <strong id="userBoy"></strong>
-                    </div>
-                    <div class="stat">
-                        <span>Seviye:</span>
-                        <strong id="userTecrube"></strong>
-                    </div>
-                    <div class="stat">
-                        <span>Antrenman:</span>
-                        <strong id="userGunSayisi"></strong>
-                    </div>
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="profile-avatar" id="userAvatar">👤</div>
+            <h2 class="profile-name" id="username">Kullanıcı</h2>
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="userKilo">--</div>
+                    <div class="stat-label">Kilo (kg)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="userBoy">--</div>
+                    <div class="stat-label">Boy (cm)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="userTecrube">--</div>
+                    <div class="stat-label">Seviye</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="userGunSayisi">--</div>
+                    <div class="stat-label">Gün/Hafta</div>
                 </div>
             </div>
-            <button class="btn-generate" id="generateBtn" onclick="generateNewProgram()">
+            <button class="generate-btn" id="generateBtn" onclick="generateNewProgram()">
                 <span id="generateBtnText">🔄 Yeni Program Oluştur</span>
                 <span id="generateBtnLoader" class="loading" style="display: none;"></span>
             </button>
         </div>
 
-        <!-- Orta - Takvim -->
-        <div class="calendar-section">
-            <div class="calendar-header">
-                <h2>Haftalık Program</h2>
-                <span id="currentWeek"></span>
+        <!-- Week View -->
+        <div class="week-section">
+            <div class="week-header">
+                <h3 class="week-title">Haftalık Program</h3>
+                <p class="week-date" id="currentWeek"></p>
             </div>
-            <div class="week-view" id="weekView">
+            <div class="week-grid" id="weekView">
                 <!-- JavaScript ile doldurulacak -->
             </div>
         </div>
 
-        <!-- Sağ Sidebar - Egzersiz Detayları -->
-        <div class="exercise-detail" id="exerciseDetail">
-            <h3>Günlük Antrenman</h3>
-            <div id="selectedDayInfo">
-                <div class="empty-state">
-                    <h3>📅</h3>
-                    <p>Detayları görmek için bir gün seçin</p>
+        <!-- Backdrop -->
+        <div class="backdrop" id="backdrop" onclick="closeBottomSheet()"></div>
+
+        <!-- Bottom Sheet -->
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="bottom-sheet-handle"></div>
+            <div class="bottom-sheet-content">
+                <h3 class="bottom-sheet-title" id="bottomSheetTitle">Günlük Antrenman</h3>
+                <div id="exerciseContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📅</div>
+                        <p>Detayları görmek için bir gün seçin</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Mobil için backdrop -->
-    <div class="mobile-backdrop" id="mobileBackdrop" onclick="closeExerciseDetail()"></div>
-
-    <!-- Alternatif Egzersiz Modal -->
-    <div id="alternativeModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Alternatif Egzersizler</h3>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <p>Bu egzersiz size zor geliyorsa, aşağıdaki alternatiflerden birini seçebilirsiniz:</p>
-            <div id="alternativeList" class="alternative-list">
-                <!-- JavaScript ile doldurulacak -->
+        <!-- Alternative Modal -->
+        <div id="alternativeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Alternatif Egzersizler</h3>
+                    <button class="close-btn" onclick="closeModal()">×</button>
+                </div>
+                <p style="margin-bottom: 1rem; color: #666;">Bu egzersiz size zor geliyorsa, aşağıdaki alternatiflerden birini seçebilirsiniz:</p>
+                <div id="alternativeList" class="alternative-list">
+                    <!-- JavaScript ile doldurulacak -->
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Toast mesajı -->
-    <div class="toast" id="toast"></div>
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
+    </div>
 
     <script>
         // Egzersiz veritabanı
@@ -516,14 +683,14 @@
             // UI güncelle
             document.getElementById('welcomeUser').textContent = `Hoş geldin, ${escapeHtml(username)}!`;
             document.getElementById('username').textContent = escapeHtml(username);
-            document.getElementById('userKilo').textContent = (currentUser.profile.kilo || '--') + ' kg';
-            document.getElementById('userBoy').textContent = (currentUser.profile.boy || '--') + ' cm';
+            document.getElementById('userKilo').textContent = currentUser.profile.kilo || '--';
+            document.getElementById('userBoy').textContent = currentUser.profile.boy || '--';
             document.getElementById('userTecrube').textContent = 
                 currentUser.profile.tecrube ? 
                 currentUser.profile.tecrube.charAt(0).toUpperCase() + currentUser.profile.tecrube.slice(1) : 
-                'Belirtilmemiş';
+                '--';
             document.getElementById('userGunSayisi').textContent = 
-                (currentUser.profile.sporGunleri ? currentUser.profile.sporGunleri.length : 0) + ' gün/hafta';
+                currentUser.profile.sporGunleri ? currentUser.profile.sporGunleri.length : 0;
             document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
             
             // Program yoksa oluştur
@@ -552,9 +719,18 @@
             
             weekView.innerHTML = '';
             
+            // Bugünün gününü hesapla
+            const today = new Date();
+            const todayDayIndex = (today.getDay() + 6) % 7; // Pazartesi = 0
+            
             gunler.forEach((gun, index) => {
                 const dayCard = document.createElement('div');
                 dayCard.className = 'day-card';
+                
+                // Bugün işaretleme
+                if (index === todayDayIndex) {
+                    dayCard.classList.add('today');
+                }
                 
                 const isWorkoutDay = currentUser.profile.sporGunleri && currentUser.profile.sporGunleri.includes(gun);
                 if (!isWorkoutDay) {
@@ -571,9 +747,9 @@
                     ${isWorkoutDay ? 
                         (dayProgram ? 
                             `<div class="workout-type">${dayProgram.tip}</div>
-                             <small>${dayProgram.egzersizler.length} egzersiz</small>` : 
-                            '<small>Program bekleniyor</small>') : 
-                        '<small>Dinlenme</small>'}
+                             <div class="exercise-count">${dayProgram.egzersizler.length} egzersiz</div>` : 
+                            '<div class="exercise-count">Program bekleniyor</div>') : 
+                        '<div class="exercise-count">Dinlenme</div>'}
                 `;
                 
                 weekView.appendChild(dayCard);
@@ -607,53 +783,68 @@
                 }
             });
             
-            // Egzersiz detaylarını göster
-            displayDayDetails(gun);
+            // Bottom sheet'i göster
+            showBottomSheet(gun);
+        }
+
+        // Bottom sheet göster
+        function showBottomSheet(gun) {
+            const bottomSheet = document.getElementById('bottomSheet');
+            const backdrop = document.getElementById('backdrop');
+            const title = document.getElementById('bottomSheetTitle');
+            const content = document.getElementById('exerciseContent');
             
-            // Mobilde detay panelini aç
-            if (window.innerWidth <= 1024) {
-                document.getElementById('exerciseDetail').classList.add('show');
-                document.getElementById('mobileBackdrop').classList.add('show');
-            }
-        }
-
-        // Mobilde detay panelini kapat
-        function closeExerciseDetail() {
-            document.getElementById('exerciseDetail').classList.remove('show');
-            document.getElementById('mobileBackdrop').classList.remove('show');
-        }
-
-        // Gün detayları
-        function displayDayDetails(gun) {
             const dayProgram = currentProgram.find(p => p.gun === gun);
-            const detailDiv = document.getElementById('selectedDayInfo');
+            
+            title.textContent = `${gun.charAt(0).toUpperCase() + gun.slice(1)} Antrenmanı`;
             
             if (!dayProgram) {
-                detailDiv.innerHTML = `
+                content.innerHTML = `
                     <div class="empty-state">
-                        <h3>📅</h3>
+                        <div class="empty-state-icon">📅</div>
                         <p>Bu gün için program oluşturulmamış</p>
                     </div>
                 `;
-                return;
+            } else {
+                content.innerHTML = `
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1rem; border-radius: 15px; margin-bottom: 1rem; text-align: center;">
+                        <h4 style="margin: 0; font-size: 1.1rem;">${dayProgram.tip}</h4>
+                        <p style="margin: 0.5rem 0 0; opacity: 0.9; font-size: 0.9rem;">${dayProgram.egzersizler.length} egzersiz</p>
+                    </div>
+                    <div class="exercise-list">
+                        ${dayProgram.egzersizler.map(egz => `
+                            <div class="exercise-item">
+                                <div class="exercise-info">
+                                    <div class="exercise-name">${escapeHtml(egz.isim)}</div>
+                                    <div class="exercise-sets">${egz.set}</div>
+                                </div>
+                                <button class="difficulty-btn" onclick="reportDifficult(${egz.id}, '${gun}')">
+                                    Zor geldi
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
             }
             
-            detailDiv.innerHTML = `
-                <h4>${gun.charAt(0).toUpperCase() + gun.slice(1)} - ${dayProgram.tip}</h4>
-                <div class="exercise-list">
-                    ${dayProgram.egzersizler.map(egz => `
-                        <div class="exercise-item">
-                            <div>
-                                <div class="exercise-name">${escapeHtml(egz.isim)}</div>
-                                <div class="exercise-sets">${egz.set}</div>
-                            </div>
-                            <button class="btn-difficult" onclick="reportDifficult(${egz.id}, '${gun}')">
-                                Zor geldi
-                            </button>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+            backdrop.classList.add('show');
+            bottomSheet.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Bottom sheet kapat
+        function closeBottomSheet() {
+            const bottomSheet = document.getElementById('bottomSheet');
+            const backdrop = document.getElementById('backdrop');
+            
+            backdrop.classList.remove('show');
+            bottomSheet.classList.remove('show');
+            document.body.style.overflow = '';
+            
+            // Aktif gün işaretini kaldır
+            document.querySelectorAll('.day-card').forEach(card => {
+                card.classList.remove('active');
+            });
         }
 
         // Toast mesajı göster
@@ -791,17 +982,17 @@
                     // Programı kaydet
                     saveProgram();
                     displayWeekView();
-                    showToast('Yeni program başarıyla oluşturuldu');
+                    showToast('🎉 Yeni program başarıyla oluşturuldu!');
                 } catch (error) {
                     console.error('Program oluşturma hatası:', error);
-                    showToast('Program oluşturulurken hata oluştu', 5000);
+                    showToast('❌ Program oluşturulurken hata oluştu', 5000);
                 } finally {
                     // Yükleme durumunu kaldır
                     generateBtn.disabled = false;
                     generateBtnText.style.display = 'inline-block';
                     generateBtnLoader.style.display = 'none';
                 }
-            }, 500); // Yapay gecikme
+            }, 1000); // Yapay gecikme
         }
 
         // Array karıştırma
@@ -825,7 +1016,7 @@
             });
             
             // Kullanıcıyı güncelle
-            const users = JSON.parse(localStorage.getItem('users') || []);
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
             const userIndex = users.findIndex(u => u.username === currentUser.username);
             if (userIndex !== -1) {
                 users[userIndex] = currentUser;
@@ -855,7 +1046,7 @@
             }
             
             if (!currentExercise) {
-                showToast('Egzersiz bulunamadı');
+                showToast('❌ Egzersiz bulunamadı');
                 return;
             }
             
@@ -874,23 +1065,24 @@
                     // Hiç alternatif yoksa
                     alternativeList.innerHTML = `
                         <div class="empty-state">
+                            <div class="empty-state-icon">😔</div>
                             <p>Uygun alternatif bulunamadı</p>
                         </div>
                     `;
-                    modal.style.display = 'flex';
+                    modal.classList.add('show');
                     return;
                 }
             }
             
             alternativeList.innerHTML = alternatives.map(alt => `
                 <div class="alternative-item" onclick="selectAlternative(${exerciseId}, ${alt.id}, '${gun}')">
-                    <strong>${alt.isim}</strong>
-                    <div>Zorluk: ${'⭐'.repeat(alt.zorluk)}</div>
-                    <div>${alt.set}</div>
+                    <div class="alternative-name">${alt.isim}</div>
+                    <div class="alternative-difficulty">Zorluk: ${'⭐'.repeat(alt.zorluk)}</div>
+                    <div class="alternative-sets">${alt.set}</div>
                 </div>
             `).join('');
             
-            modal.style.display = 'flex';
+            modal.classList.add('show');
         }
 
         // Alternatif egzersiz seç
@@ -898,13 +1090,13 @@
             // Programda değiştir
             const dayProgram = currentProgram.find(p => p.gun === gun);
             if (!dayProgram) {
-                showToast('Program bulunamadı');
+                showToast('❌ Program bulunamadı');
                 return;
             }
             
             const exerciseIndex = dayProgram.egzersizler.findIndex(e => e.id === oldId);
             if (exerciseIndex === -1) {
-                showToast('Egzersiz bulunamadı');
+                showToast('❌ Egzersiz bulunamadı');
                 return;
             }
             
@@ -919,7 +1111,7 @@
             }
             
             if (!newExercise) {
-                showToast('Alternatif egzersiz bulunamadı');
+                showToast('❌ Alternatif egzersiz bulunamadı');
                 return;
             }
             
@@ -927,14 +1119,19 @@
             
             // Kaydet ve güncelle
             saveProgram();
-            displayDayDetails(gun);
             closeModal();
-            showToast('Egzersiz başarıyla değiştirildi');
+            
+            // Bottom sheet'i güncelle
+            if (selectedDay === gun) {
+                showBottomSheet(gun);
+            }
+            
+            showToast('✅ Egzersiz başarıyla değiştirildi');
         }
 
         // Modal kapat
         function closeModal() {
-            document.getElementById('alternativeModal').style.display = 'none';
+            document.getElementById('alternativeModal').classList.remove('show');
         }
 
         // Programı kaydet
@@ -955,13 +1152,50 @@
             window.location.href = 'index.html';
         }
 
+        // Touch event listeners for better mobile interaction
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.getElementById('bottomSheet').addEventListener('touchstart', e => {
+            touchStartY = e.changedTouches[0].screenY;
+        });
+
+        document.getElementById('bottomSheet').addEventListener('touchend', e => {
+            touchEndY = e.changedTouches[0].screenY;
+            const deltaY = touchStartY - touchEndY;
+            
+            // Aşağı kaydırma ile kapatma
+            if (deltaY < -50) {
+                closeBottomSheet();
+            }
+        });
+
         // Modal dışına tıklama
-        window.onclick = function(event) {
-            const modal = document.getElementById('alternativeModal');
-            if (event.target === modal) {
+        document.getElementById('alternativeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
                 closeModal();
             }
+        });
+
+        // Escape tuşu ile kapatma
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('alternativeModal').classList.contains('show')) {
+                    closeModal();
+                } else if (document.getElementById('bottomSheet').classList.contains('show')) {
+                    closeBottomSheet();
+                }
+            }
+        });
+
+        // Viewport height fix for mobile browsers
+        function setViewportHeight() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
         }
+
+        window.addEventListener('resize', setViewportHeight);
+        setViewportHeight();
     </script>
 </body>
 </html>
