@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fitness Takvimi - Giriş</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+<div class="container">
+  <h1>💪 Fitness Takvimi</h1>
+
+  <div class="tab-container">
+    <div class="tab active" onclick="changeTab('login')">Giriş Yap</div>
+    <div class="tab" onclick="changeTab('register')">Kayıt Ol</div>
+  </div>
+
+  <div id="message"></div>
+
+  <!-- Giriş Formu -->
+  <div id="login" class="tab-content active">
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginUsername">Kullanıcı Adı</label>
+        <input type="text" id="loginUsername" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Şifre</label>
+        <input type="password" id="loginPassword" required>
+      </div>
+      <button type="submit">Giriş Yap</button>
+    </form>
+  </div>
+
+  <!-- Kayıt Formu -->
+  <div id="register" class="tab-content">
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="regUsername">Kullanıcı Adı</label>
+        <input type="text" id="regUsername" required>
+      </div>
+      <div class="form-group">
+        <label for="regPassword">Şifre</label>
+        <input type="password" id="regPassword" required>
+      </div>
+      <div class="form-group">
+        <label for="regKilo">Kilo (kg)</label>
+        <input type="number" id="regKilo" min="30" max="200" required>
+      </div>
+      <div class="form-group">
+        <label for="regBoy">Boy (cm)</label>
+        <input type="number" id="regBoy" min="120" max="220" required>
+      </div>
+      <div class="form-group">
+        <label for="regTecrube">Tecrübe Seviyesi</label>
+        <select id="regTecrube" required>
+          <option value="">Seçiniz</option>
+          <option value="baslangic">Başlangıç</option>
+          <option value="orta">Orta</option>
+          <option value="ileri">İleri</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Spor Günleri</label>
+        <div class="checkbox-group">
+          <label class="checkbox-wrapper">
+            <input type="checkbox" name="sporGunleri" value="pazartesi">
+            Pazartesi
+          </label>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" name="sporGunleri" value="sali">
+            Salı
+          </label>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" name="sporGunleri" value="carsamba">
+            Çarşamba
+          </label>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" name="sporGunleri" value="persembe">
+            Perşembe
+          </label>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" name="sporGunleri" value="cuma">
+            Cuma
+          </label>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" name="sporGunleri" value="cumartesi">
+            Cumartesi
+          </label>
+          <label class="checkbox-wrapper">
+            <input type="checkbox" name="sporGunleri" value="pazar">
+            Pazar
+          </label>
+        </div>
+      </div>
+      <button type="submit">Kayıt Ol</button>
+    </form>
+  </div>
+</div>
+
+<script src="login.js"></script>
+</body>
+</html>

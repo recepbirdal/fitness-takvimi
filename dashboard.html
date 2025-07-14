@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Takvimi</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="app-container">
+    <!-- Header -->
+    <div class="header">
+        <button class="logout-btn" onclick="logout()" title="Çıkış Yap">
+            🚪
+        </button>
+        <h1 class="header-title">💪 Fitness Takvimi</h1>
+        <p class="header-subtitle" id="welcomeUser">Hoş geldin!</p>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="profile-card">
+        <div class="profile-avatar" id="userAvatar">👤</div>
+        <h2 class="profile-name" id="username">Kullanıcı</h2>
+        <div class="profile-stats">
+            <div class="stat-item">
+                <div class="stat-value" id="userKilo">--</div>
+                <div class="stat-label">Kilo (kg)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="userBoy">--</div>
+                <div class="stat-label">Boy (cm)</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="userTecrube">--</div>
+                <div class="stat-label">Seviye</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="userGunSayisi">--</div>
+                <div class="stat-label">Gün/Hafta</div>
+            </div>
+        </div>
+        <button class="generate-btn" id="generateBtn" onclick="generateNewProgram()">
+            <span id="generateBtnText">🔄 Yeni Program Oluştur</span>
+            <span id="generateBtnLoader" class="loading" style="display: none;"></span>
+        </button>
+    </div>
+
+    <!-- Week View -->
+    <div class="week-section">
+        <div class="week-header">
+            <h3 class="week-title">Haftalık Program</h3>
+            <p class="week-date" id="currentWeek"></p>
+        </div>
+        <div class="week-grid" id="weekView">
+            <!-- JavaScript ile doldurulacak -->
+        </div>
+    </div>
+
+    <!-- Backdrop -->
+    <div class="backdrop" id="backdrop" onclick="closeBottomSheet()"></div>
+
+    <!-- Bottom Sheet -->
+    <div class="bottom-sheet" id="bottomSheet">
+        <div class="bottom-sheet-handle"></div>
+        <div class="bottom-sheet-content">
+            <h3 class="bottom-sheet-title" id="bottomSheetTitle">Günlük Antrenman</h3>
+            <div id="exerciseContent">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📅</div>
+                    <p>Detayları görmek için bir gün seçin</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alternative Modal -->
+    <div id="alternativeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Alternatif Egzersizler</h3>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <p style="margin-bottom: 1rem; color: #666;">Bu egzersiz size zor geliyorsa, aşağıdaki alternatiflerden birini seçebilirsiniz:</p>
+            <div id="alternativeList" class="alternative-list">
+                <!-- JavaScript ile doldurulacak -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
